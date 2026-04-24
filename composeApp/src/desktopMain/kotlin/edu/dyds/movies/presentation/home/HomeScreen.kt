@@ -1,27 +1,49 @@
 @file:Suppress("FunctionName")
 
-package edu.dyds.movies
+package edu.dyds.movies.presentation.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindow
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import coil3.compose.AsyncImage
 import dydsproject.composeapp.generated.resources.Res
 import dydsproject.composeapp.generated.resources.app_name
 import dydsproject.composeapp.generated.resources.error
+import edu.dyds.movies.domain.entity.Movie
+import edu.dyds.movies.domain.entity.QualifiedMovie
+import edu.dyds.movies.presentation.utils.LoadingIndicator
+import edu.dyds.movies.presentation.utils.MoviesViewModel
+import edu.dyds.movies.presentation.utils.NoResults
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +52,6 @@ fun HomeScreen(
     viewModel: MoviesViewModel,
     onGoodMovieClick: (Movie) -> Unit
 ) {
-
     LaunchedEffect(Unit) {
         viewModel.getAllMovies()
     }
@@ -49,7 +70,6 @@ fun HomeScreen(
                 },
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
             ) { padding ->
-
                 LoadingIndicator(state.isLoading)
 
                 when {
@@ -111,7 +131,9 @@ private fun BadMovieItem(movie: Movie) {
     var dialogState by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.alpha(0.7f).clickable { dialogState = true }
+        modifier = Modifier
+            .alpha(0.7f)
+            .clickable { dialogState = true }
     ) {
         AsyncImage(
             model = movie.poster,
@@ -146,3 +168,4 @@ private fun BadMovieItem(movie: Movie) {
         )
     }
 }
+
