@@ -44,18 +44,18 @@ import dydsproject.composeapp.generated.resources.release_date
 import dydsproject.composeapp.generated.resources.vote_average
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.presentation.utils.LoadingIndicator
-import edu.dyds.movies.presentation.utils.MoviesViewModel
+import edu.dyds.movies.presentation.ViewModels.DetailViewModel
 import edu.dyds.movies.presentation.utils.NoResults
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    viewModel: MoviesViewModel,
+    viewModel: DetailViewModel,
     id: Int,
     onBack: () -> Unit
 ) {
-    val state by viewModel.movieDetailStateFlow.collectAsState(MoviesViewModel.MovieDetailUiState())
+    val state by viewModel.movieDetailStateFlow.collectAsState(DetailViewModel.MovieDetailUiState())
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     LaunchedEffect(id) {
@@ -156,4 +156,3 @@ private fun DetailTopBar(
         scrollBehavior = scrollBehavior
     )
 }
-

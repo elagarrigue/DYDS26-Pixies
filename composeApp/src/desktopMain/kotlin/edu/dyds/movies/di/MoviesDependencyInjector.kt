@@ -7,7 +7,9 @@ import edu.dyds.movies.data.external.TmdbMoviesRemoteDataSource
 import edu.dyds.movies.data.local.InMemoryMoviesCache
 import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
-import edu.dyds.movies.presentation.utils.MoviesViewModel
+import edu.dyds.movies.presentation.ViewModels.MoviesViewModel
+import edu.dyds.movies.presentation.ViewModels.HomeViewModel
+import edu.dyds.movies.presentation.ViewModels.DetailViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
@@ -60,5 +62,22 @@ object MoviesDependencyInjector {
             )
         }
     }
-}
 
+    @Composable
+    fun getHomeViewModel(): HomeViewModel {
+        return viewModel {
+            HomeViewModel(
+                getPopularMoviesUseCase = getPopularMoviesUseCase
+            )
+        }
+    }
+
+    @Composable
+    fun getDetailViewModel(): DetailViewModel {
+        return viewModel {
+            DetailViewModel(
+                getMovieDetailsUseCase = getMovieDetailsUseCase
+            )
+        }
+    }
+}
