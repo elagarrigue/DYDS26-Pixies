@@ -1,18 +1,18 @@
 package edu.dyds.movies.data
 
-import edu.dyds.movies.data.external.TmdbMoviesRemoteDataSource
+import edu.dyds.movies.data.external.MoviesRemoteDataSource
 import edu.dyds.movies.data.external.toDomainMovie
-import edu.dyds.movies.data.local.InMemoryMoviesCache
+import edu.dyds.movies.data.local.MoviesLocalDataSource
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.repository.MoviesRepository
 
 class MoviesRepositoryImpl(
-    private val remoteDataSource: TmdbMoviesRemoteDataSource,
-    private val memoryCache: InMemoryMoviesCache
+    private val remoteDataSource: MoviesRemoteDataSource,
+    private val localDataSource: MoviesLocalDataSource
 ) : MoviesRepository {
 
     override suspend fun getPopularMovies(): List<Movie> {
-        val cachedMovies = memoryCache.getPopularMovies()
+        val cachedMovies = localDataSource.getPopularMovies()
         if (cachedMovies.isNotEmpty()) {
             return cachedMovies
         }
@@ -21,7 +21,7 @@ class MoviesRepositoryImpl(
             remoteDataSource
                 .getPopularMovies()
                 .map { remoteMovie -> remoteMovie.toDomainMovie() }
-                .also { movies -> memoryCache.savePopularMovies(movies) }
+                .also { movies -> localDataSource.savePopularMovies(movies) }
         } catch (_: Exception) {
             emptyList()
         }
@@ -35,4 +35,3 @@ class MoviesRepositoryImpl(
         }
     }
 }
-
