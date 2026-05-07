@@ -9,9 +9,8 @@ import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCase
 import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCaseImpl
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCaseImpl
-import edu.dyds.movies.presentation.ViewModels.MoviesViewModel
-import edu.dyds.movies.presentation.ViewModels.HomeViewModel
-import edu.dyds.movies.presentation.ViewModels.DetailViewModel
+import edu.dyds.movies.presentation.home.HomeViewModel
+import edu.dyds.movies.presentation.detail.DetailViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
@@ -55,15 +54,7 @@ object MoviesDependencyInjector {
         GetMovieDetailsUseCaseImpl(moviesRepository)
     }
 
-    @Composable
-    fun getMoviesViewModel(): MoviesViewModel {
-        return viewModel {
-            MoviesViewModel(
-                getPopularMoviesUseCase = getPopularMoviesUseCase,
-                getMovieDetailsUseCase = getMovieDetailsUseCase
-            )
-        }
-    }
+
 
     @Composable
     fun getHomeViewModel(): HomeViewModel {

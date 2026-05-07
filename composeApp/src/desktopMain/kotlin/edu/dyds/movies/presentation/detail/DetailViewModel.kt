@@ -1,4 +1,4 @@
-package edu.dyds.movies.presentation.ViewModels
+package edu.dyds.movies.presentation.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

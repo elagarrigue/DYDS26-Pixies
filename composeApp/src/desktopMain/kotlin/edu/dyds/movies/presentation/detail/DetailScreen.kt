@@ -44,7 +44,6 @@ import dydsproject.composeapp.generated.resources.release_date
 import dydsproject.composeapp.generated.resources.vote_average
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.presentation.utils.LoadingIndicator
-import edu.dyds.movies.presentation.ViewModels.DetailViewModel
 import edu.dyds.movies.presentation.utils.NoResults
 import org.jetbrains.compose.resources.stringResource
 
