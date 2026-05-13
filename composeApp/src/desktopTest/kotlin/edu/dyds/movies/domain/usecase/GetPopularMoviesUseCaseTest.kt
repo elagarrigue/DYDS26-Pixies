@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class GetPopularMoviesUseCaseImplTest {
+class GetPopularMoviesUseCaseTest {
 
     private class FakeMoviesRepository(
         private val popularMovies: List<Movie>
