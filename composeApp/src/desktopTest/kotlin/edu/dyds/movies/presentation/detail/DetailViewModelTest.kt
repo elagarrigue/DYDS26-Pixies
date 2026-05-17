@@ -1,6 +1,7 @@
 package edu.dyds.movies.presentation.detail
 
 import edu.dyds.movies.domain.entity.Movie
+import edu.dyds.movies.domain.fakes.FakeGetMovieDetailsUseCase
 import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,17 +34,6 @@ class DetailViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private class FakeGetMovieDetailsUseCase(
-        private val movieToReturn: Movie?
-    ) : GetMovieDetailsUseCase {
-        var invokeCalls = 0
-            private set
-
-        override suspend fun invoke(id: Int): Movie? {
-            invokeCalls++
-            return movieToReturn
-        }
-    }
 
     private fun sampleMovie(id: Int = 1, title: String = "Title $id"): Movie {
         return Movie(

@@ -2,6 +2,7 @@ package edu.dyds.movies.presentation.home
 
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.entity.QualifiedMovie
+import edu.dyds.movies.domain.fakes.FakeGetPopularMoviesUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,17 +35,6 @@ class HomeViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private class FakeGetPopularMoviesUseCase(
-        private val moviesToReturn: List<QualifiedMovie>
-    ) : GetPopularMoviesUseCase {
-        var invokeCalls = 0
-            private set
-
-        override suspend fun invoke(): List<QualifiedMovie> {
-            invokeCalls++
-            return moviesToReturn
-        }
-    }
 
     private fun qualifiedMovie(id: Int, title: String): QualifiedMovie {
         return QualifiedMovie(

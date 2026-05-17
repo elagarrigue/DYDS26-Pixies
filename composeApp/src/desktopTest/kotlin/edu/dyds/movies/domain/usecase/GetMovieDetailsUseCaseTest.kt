@@ -1,7 +1,7 @@
 package edu.dyds.movies.domain.usecase
 
+import edu.dyds.movies.data.fakes.FakeMoviesRepository
 import edu.dyds.movies.domain.entity.Movie
-import edu.dyds.movies.domain.repository.MoviesRepository
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -9,24 +9,6 @@ import kotlin.test.assertNull
 
 class GetMovieDetailsUseCaseTest {
 
-    class MoviesRepositoryFake : MoviesRepository {
-        private val movieDatabase = mutableMapOf<Int, Movie>()
-        var getMovieDetailsCallCount = 0
-            private set
-
-        fun addMovie(movie: Movie) {
-            movieDatabase[movie.id] = movie
-        }
-
-        override suspend fun getPopularMovies(): List<Movie> {
-            return movieDatabase.values.toList()
-        }
-
-        override suspend fun getMovieDetails(id: Int): Movie? {
-            getMovieDetailsCallCount++
-            return movieDatabase[id]
-        }
-    }
 
     private fun createTestMovie(
         id: Int = 1,
@@ -55,7 +37,7 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `invoke should return movie when movie exists in repository`() = runTest {
         // arrange
-        val repository = MoviesRepositoryFake()
+        val repository = FakeMoviesRepository()
         val testMovie = createTestMovie(id = 123, title = "Avatar")
         repository.addMovie(testMovie)
 
@@ -72,7 +54,7 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `invoke should return null when movie does not exist in repository`() = runTest {
         // arrange
-        val repository = MoviesRepositoryFake()
+        val repository = FakeMoviesRepository()
         val useCase = GetMovieDetailsUseCaseImpl(repository)
 
         // act
@@ -86,7 +68,7 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `invoke should fetch correct movie by id from multiple movies`() = runTest {
         // arrange
-        val repository = MoviesRepositoryFake()
+        val repository = FakeMoviesRepository()
         val movie1 = createTestMovie(id = 1, title = "Movie 1")
         val movie2 = createTestMovie(id = 2, title = "Movie 2")
         val movie3 = createTestMovie(id = 3, title = "Movie 3")
@@ -109,7 +91,7 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `invoke should return correct movie details with full data`() = runTest {
         // arrange
-        val repository = MoviesRepositoryFake()
+        val repository = FakeMoviesRepository()
         val movie = createTestMovie(
             id = 550,
             title = "Fight Club",

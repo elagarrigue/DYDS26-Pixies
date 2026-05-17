@@ -1,8 +1,8 @@
 package edu.dyds.movies.data
 
-import edu.dyds.movies.data.external.MoviesRemoteDataSource
 import edu.dyds.movies.data.external.RemoteMovie
-import edu.dyds.movies.data.local.MoviesLocalDataSource
+import edu.dyds.movies.data.fakes.FakeMoviesLocalDataSource
+import edu.dyds.movies.data.fakes.FakeMoviesRemoteDataSource
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -10,30 +10,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class FakeMoviesRemoteDataSource(
-    private val moviesResult: Result<List<RemoteMovie>>
-) : MoviesRemoteDataSource {
-    override suspend fun getPopularMovies(): List<RemoteMovie> {
-        return moviesResult.getOrThrow()
-    }
-
-    override suspend fun getMovieDetails(id: Int): RemoteMovie {
-        return moviesResult.getOrThrow().find { it.id == id }
-            ?: throw IllegalArgumentException("Movie not found")
-    }
-}
-
-class FakeMoviesLocalDataSource : MoviesLocalDataSource {
-    private var cachedMovies: List<Movie> = emptyList()
-
-    override fun getPopularMovies(): List<Movie> {
-        return cachedMovies
-    }
-
-    override fun savePopularMovies(movies: List<Movie>) {
-        cachedMovies = movies
-    }
-}
 
 class MoviesRepositoryImplTest {
 
