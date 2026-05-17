@@ -3,18 +3,11 @@ package edu.dyds.movies.presentation.home
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.entity.QualifiedMovie
 import edu.dyds.movies.domain.fakes.FakeGetPopularMoviesUseCase
-import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -23,18 +16,7 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    private val testDispatcher = StandardTestDispatcher()
-
-    @Before
-    fun setup() {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
+    private val testScope = CoroutineScope(UnconfinedTestDispatcher())
 
     private fun qualifiedMovie(id: Int, title: String): QualifiedMovie {
         return QualifiedMovie(
@@ -66,7 +48,7 @@ class HomeViewModelTest {
 
         val states = mutableListOf<HomeViewModel.MoviesUiState>()
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+        testScope.launch {
             viewModel.moviesStateFlow.collect { state ->
                 states.add(state)
             }
@@ -74,7 +56,6 @@ class HomeViewModelTest {
 
         // act
         viewModel.getAllMovies()
-        advanceUntilIdle()
 
         // assert
         assertEquals(HomeViewModel.MoviesUiState(), states.first())
@@ -86,7 +67,7 @@ class HomeViewModelTest {
         val successState = states.last()
         assertFalse(successState.isLoading)
         assertEquals(movies, successState.movies)
-        
+
         assertEquals(1, useCase.invokeCalls)
     }
 }
