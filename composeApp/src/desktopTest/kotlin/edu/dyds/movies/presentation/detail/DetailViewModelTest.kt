@@ -65,14 +65,13 @@ class DetailViewModelTest {
             }
         }
 
-        // initial state
-        assertEquals(DetailViewModel.MovieDetailUiState(), states.first())
-
         // act
         viewModel.getMovieDetail(movie.id)
         advanceUntilIdle()
 
-        // assert loading state emitted
+        // assert
+        assertEquals(DetailViewModel.MovieDetailUiState(), states.first())
+
         val loadingState = states.find { it.isLoading }!!
         assertTrue(loadingState != null, "Expected a loading state to be emitted")
         assertTrue(loadingState.movie == null)
@@ -94,14 +93,13 @@ class DetailViewModelTest {
             viewModel.movieDetailStateFlow.collect { states.add(it) }
         }
 
-        // initial state
-        assertEquals(DetailViewModel.MovieDetailUiState(), states.first())
-
         // act
         viewModel.getMovieDetail(123)
         advanceUntilIdle()
 
-        // assert final state has no movie and is not loading
+        // assert
+        assertEquals(DetailViewModel.MovieDetailUiState(), states.first())
+
         val finalState = states.last()
         assertFalse(finalState.isLoading)
         assertEquals(null, finalState.movie)

@@ -37,9 +37,8 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `invoke should return movie when movie exists in repository`() = runTest {
         // arrange
-        val repository = FakeMoviesRepository()
         val testMovie = createTestMovie(id = 123, title = "Avatar")
-        repository.addMovie(testMovie)
+        val repository = FakeMoviesRepository(movies = listOf(testMovie))
 
         val useCase = GetMovieDetailsUseCaseImpl(repository)
 
@@ -68,14 +67,10 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `invoke should fetch correct movie by id from multiple movies`() = runTest {
         // arrange
-        val repository = FakeMoviesRepository()
         val movie1 = createTestMovie(id = 1, title = "Movie 1")
         val movie2 = createTestMovie(id = 2, title = "Movie 2")
         val movie3 = createTestMovie(id = 3, title = "Movie 3")
-
-        repository.addMovie(movie1)
-        repository.addMovie(movie2)
-        repository.addMovie(movie3)
+        val repository = FakeMoviesRepository(movies = listOf(movie1, movie2, movie3))
 
         val useCase = GetMovieDetailsUseCaseImpl(repository)
 
@@ -91,7 +86,6 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `invoke should return correct movie details with full data`() = runTest {
         // arrange
-        val repository = FakeMoviesRepository()
         val movie = createTestMovie(
             id = 550,
             title = "Fight Club",
@@ -104,7 +98,7 @@ class GetMovieDetailsUseCaseTest {
             popularity = 62.5,
             voteAverage = 8.8
         )
-        repository.addMovie(movie)
+        val repository = FakeMoviesRepository(movies = listOf(movie))
 
         val useCase = GetMovieDetailsUseCaseImpl(repository)
 
