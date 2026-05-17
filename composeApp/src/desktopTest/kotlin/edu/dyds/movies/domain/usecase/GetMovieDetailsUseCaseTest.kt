@@ -9,9 +9,6 @@ import kotlin.test.assertNull
 
 class GetMovieDetailsUseCaseTest {
 
-    /**
-     * Fake implementation of MoviesRepository for testing purposes
-     */
     class MoviesRepositoryFake : MoviesRepository {
         private val movieDatabase = mutableMapOf<Int, Movie>()
         var getMovieDetailsCallCount = 0

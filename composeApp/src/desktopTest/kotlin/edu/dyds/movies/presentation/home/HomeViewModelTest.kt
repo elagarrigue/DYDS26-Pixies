@@ -75,8 +75,7 @@ class HomeViewModelTest {
         val viewModel = HomeViewModel(useCase)
 
         val states = mutableListOf<HomeViewModel.MoviesUiState>()
-        
-        // Collect states in the background
+
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             viewModel.moviesStateFlow.collect { state ->
                 states.add(state)
@@ -87,19 +86,12 @@ class HomeViewModelTest {
         assertEquals(HomeViewModel.MoviesUiState(), states.first())
 
         // act
-        print(1)
         viewModel.getAllMovies()
-        
-        // advance the coroutine dispatcher to execute the launched coroutines
-        print(2)
         advanceUntilIdle()
 
         // assert loading state was emitted
-        print(3)
         val loadingState = states.find { it.isLoading }
-        print(4)
         assertTrue(loadingState != null, "Expected a loading state to be emitted")
-        print(5)
         assertTrue(loadingState.movies.isEmpty())
 
         // assert success state (last state)

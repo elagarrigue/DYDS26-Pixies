@@ -69,7 +69,6 @@ class DetailViewModelTest {
 
         val states = mutableListOf<DetailViewModel.MovieDetailUiState>()
 
-        // collect states in background like HomeViewModel tests
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             viewModel.movieDetailStateFlow.collect { state ->
                 states.add(state)
@@ -81,7 +80,6 @@ class DetailViewModelTest {
 
         // act
         viewModel.getMovieDetail(movie.id)
-        // advance scheduler to run coroutines
         advanceUntilIdle()
 
         // assert loading state emitted
@@ -89,7 +87,6 @@ class DetailViewModelTest {
         assertTrue(loadingState != null, "Expected a loading state to be emitted")
         assertTrue(loadingState.movie == null)
 
-        // success state
         val successState = states.last()
         assertFalse(successState.isLoading)
         assertEquals(movie, successState.movie)
