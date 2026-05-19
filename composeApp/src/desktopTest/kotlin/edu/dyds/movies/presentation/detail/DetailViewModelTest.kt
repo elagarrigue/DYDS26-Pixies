@@ -51,8 +51,6 @@ class DetailViewModelTest {
 
         // act
         viewModel.getMovieDetail(movie.id)
-        advanceUntilIdle()
-
 
         // assert
         assertEquals(DetailViewModel.MovieDetailUiState(), states.first())
@@ -80,7 +78,6 @@ class DetailViewModelTest {
 
         // act
         viewModel.getMovieDetail(123)
-        //delay(10)
         advanceUntilIdle()
 
         // assert
@@ -89,7 +86,6 @@ class DetailViewModelTest {
         val finalState = states.last()
         assertFalse(finalState.isLoading)
         assertEquals(null, finalState.movie)
-        print(useCase.invokeCalls)
         assertEquals(1, useCase.invokeCalls)
     }
 }

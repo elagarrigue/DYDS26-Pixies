@@ -57,7 +57,6 @@ class HomeViewModelTest {
 
         // act
         viewModel.getAllMovies()
-        advanceUntilIdle()
 
         // assert
         assertEquals(HomeViewModel.MoviesUiState(), states.first())
