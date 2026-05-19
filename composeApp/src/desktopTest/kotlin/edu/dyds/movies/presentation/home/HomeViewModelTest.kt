@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -56,6 +57,7 @@ class HomeViewModelTest {
 
         // act
         viewModel.getAllMovies()
+        advanceUntilIdle()
 
         // assert
         assertEquals(HomeViewModel.MoviesUiState(), states.first())
