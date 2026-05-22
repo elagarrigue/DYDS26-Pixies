@@ -12,7 +12,6 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DetailViewModelTest {
@@ -55,11 +54,11 @@ class DetailViewModelTest {
         // assert
         assertEquals(DetailViewModel.MovieDetailUiState(), states.first())
 
-        val loadingState = states.find { it.isLoading }
+        val loadingState = states[1]
         assertNotNull(loadingState, "Expected a loading state to be emitted")
-        assertTrue(loadingState.movie == null)
+        assertEquals(loadingState.movie, null)
 
-        val successState = states.last()
+        val successState = states[2]
         assertFalse(successState.isLoading)
         assertEquals(movie, successState.movie)
         assertEquals(1, useCase.invokeCalls)

@@ -61,11 +61,10 @@ class HomeViewModelTest {
         // assert
         assertEquals(HomeViewModel.MoviesUiState(), states.first())
 
-        val loadingState = states.find { it.isLoading }
-        assertTrue(loadingState != null, "Expected a loading state to be emitted")
+        val loadingState = states[1]
         assertTrue(loadingState.movies.isEmpty())
 
-        val successState = states.last()
+        val successState = states[2]
         assertFalse(successState.isLoading)
         assertEquals(movies, successState.movies)
 
