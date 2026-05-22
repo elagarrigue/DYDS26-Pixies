@@ -14,6 +14,7 @@ kotlin {
         val desktopMain by getting
 
         commonMain.dependencies {
+
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
 
