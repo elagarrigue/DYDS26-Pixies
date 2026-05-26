@@ -1,13 +1,15 @@
 package edu.dyds.movies.data
 
+import edu.dyds.movies.data.external.MovieRemoteDataSource
 import edu.dyds.movies.data.external.MoviesRemoteDataSource
 import edu.dyds.movies.data.external.toDomainMovie
 import edu.dyds.movies.data.local.MoviesLocalDataSource
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.repository.MoviesRepository
+import edu.dyds.movies.data.external.tmdb.TMDBRemoteDataSource
 
 class MoviesRepositoryImpl(
-    private val remoteDataSource: MoviesRemoteDataSource,
+    private val remoteDataSource: TMDBRemoteDataSource,
     private val localDataSource: MoviesLocalDataSource
 ) : MoviesRepository {
 
