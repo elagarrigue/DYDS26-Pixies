@@ -27,9 +27,9 @@ class MoviesRepositoryImpl(
         }
     }
 
-    override suspend fun getMovieDetails(id: Int): Movie? {
+    override suspend fun getMovieByTitle(title: String): Movie? {
         return try {
-            remoteDataSource.getMovieDetails(id).toDomainMovie()
+            remoteDataSource.getMovieByTitle(title).toDomainMovie()
         } catch (_: Exception) {
             null
         }

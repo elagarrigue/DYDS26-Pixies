@@ -40,7 +40,7 @@ class GetMovieDetailsUseCaseTest {
         val testMovie = createTestMovie(id = 123, title = "Avatar")
         val repository = FakeMoviesRepository(movies = listOf(testMovie))
 
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
         val result = useCase(123)
@@ -54,7 +54,7 @@ class GetMovieDetailsUseCaseTest {
     fun `invoke should return null when movie does not exist in repository`() = runTest {
         // arrange
         val repository = FakeMoviesRepository()
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
         val result = useCase(999)
@@ -72,7 +72,7 @@ class GetMovieDetailsUseCaseTest {
         val movie3 = createTestMovie(id = 3, title = "Movie 3")
         val repository = FakeMoviesRepository(movies = listOf(movie1, movie2, movie3))
 
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
         val result = useCase(2)
@@ -100,7 +100,7 @@ class GetMovieDetailsUseCaseTest {
         )
         val repository = FakeMoviesRepository(movies = listOf(movie))
 
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
         val result = useCase(550)

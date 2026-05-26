@@ -5,8 +5,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import edu.dyds.movies.data.MoviesRepositoryImpl
 import edu.dyds.movies.data.external.MoviesRemoteDataSourceImpl
 import edu.dyds.movies.data.local.MoviesLocalDataSourceImpl
-import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCase
-import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCaseImpl
+import edu.dyds.movies.domain.usecase.GetMovieByTitleUseCase
+import edu.dyds.movies.domain.usecase.GetMovieByTitleUseCaseImpl
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCaseImpl
 import edu.dyds.movies.presentation.home.HomeViewModel
@@ -50,11 +50,9 @@ object MoviesDependencyInjector {
         GetPopularMoviesUseCaseImpl(moviesRepository)
     }
 
-    private val getMovieDetailsUseCase: GetMovieDetailsUseCase by lazy {
-        GetMovieDetailsUseCaseImpl(moviesRepository)
+    private val getMovieByTitleUseCase: GetMovieByTitleUseCase by lazy {
+        GetMovieByTitleUseCaseImpl(moviesRepository)
     }
-
-
 
     @Composable
     fun getHomeViewModel(): HomeViewModel {
@@ -69,7 +67,7 @@ object MoviesDependencyInjector {
     fun getDetailViewModel(): DetailViewModel {
         return viewModel {
             DetailViewModel(
-                getMovieDetailsUseCase = getMovieDetailsUseCase
+                getMovieByTitleUseCase = getMovieByTitleUseCase
             )
         }
     }

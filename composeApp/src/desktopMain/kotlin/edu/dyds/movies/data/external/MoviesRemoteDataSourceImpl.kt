@@ -13,7 +13,10 @@ class MoviesRemoteDataSourceImpl(
             .results
     }
 
-    override suspend fun getMovieDetails(id: Int): RemoteMovie {
-        return tmdbHttpClient.get("/3/movie/$id").body()
+    override suspend fun getMovieByTitle(title: String): RemoteMovie {
+        return tmdbHttpClient.get("/3/search/movie?query=$title")
+            .body<RemoteResult>()
+            .results
+            .first()
     }
 }

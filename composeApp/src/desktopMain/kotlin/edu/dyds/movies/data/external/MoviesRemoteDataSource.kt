@@ -4,6 +4,6 @@ interface MoviesRemoteDataSource {
 
     suspend fun getPopularMovies(): List<RemoteMovie>
 
-    suspend fun getMovieDetails(id: Int): RemoteMovie
+    suspend fun getMovieByTitle(title: String): RemoteMovie
 
 }
