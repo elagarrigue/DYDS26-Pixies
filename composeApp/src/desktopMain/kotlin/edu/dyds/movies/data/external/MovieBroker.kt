@@ -39,7 +39,10 @@ class MovieBroker(
         return Movie(
             id = tmdbMovie.id,
             title = tmdbMovie.title,
-            overview = "TMDB: ${tmdbMovie.overview}\n\nOMDB: ${omdbMovie.overview}",
+            overview = listOfNotNull(
+                if (tmdbMovie.overview.isNotEmpty()) "TMDB: ${tmdbMovie.overview}" else null,
+                if (omdbMovie.overview.isNotEmpty()) "OMDB: ${omdbMovie.overview}" else null
+            ).joinToString("\n\n"),
             releaseDate = tmdbMovie.releaseDate,
             poster = tmdbMovie.poster,
             backdrop = tmdbMovie.backdrop,

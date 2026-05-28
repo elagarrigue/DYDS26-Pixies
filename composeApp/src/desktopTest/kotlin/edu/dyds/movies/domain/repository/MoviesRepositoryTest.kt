@@ -1,6 +1,6 @@
 package edu.dyds.movies.data
 
-import edu.dyds.movies.data.external.tmdb.RemoteMovie
+import edu.dyds.movies.data.external.tmdb.TMDBRemoteMovie
 import edu.dyds.movies.data.fakes.FakeMoviesLocalDataSource
 import edu.dyds.movies.data.fakes.FakeMoviesRemoteDataSource
 import edu.dyds.movies.domain.entity.Movie
@@ -13,8 +13,8 @@ import kotlin.test.assertTrue
 
 class MoviesRepositoryImplTest {
 
-    private fun createRemoteMovie(id: Int = 1): RemoteMovie {
-        return RemoteMovie(
+    private fun createRemoteMovie(id: Int = 1): TMDBRemoteMovie {
+        return TMDBRemoteMovie(
             id = id,
             title = "Test Movie $id",
             overview = "Test Overview",

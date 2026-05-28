@@ -1,5 +1,6 @@
 package edu.dyds.movies.data.external.tmdb
 
+import edu.dyds.movies.data.external.RemoteMovie
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,13 +11,13 @@ private const val BACKDROP_BASE_URL = "https://image.tmdb.org/t/p/w780"
 @Serializable
 data class RemoteResult(
     val page: Int,
-    val results: List<RemoteMovie>,
+    val results: List<TMDBRemoteMovie>,
     @SerialName("total_pages") val totalPages: Int,
     @SerialName("total_results") val totalResults: Int
 )
 
 @Serializable
-data class RemoteMovie(
+data class TMDBRemoteMovie(
     val id: Int,
     val title: String,
     val overview: String,
@@ -27,20 +28,19 @@ data class RemoteMovie(
     @SerialName("original_language") val originalLanguage: String,
     val popularity: Double?,
     @SerialName("vote_average") val voteAverage: Double?,
-)
-
-fun RemoteMovie.toDomainMovie(): Movie {
-    return Movie(
-        id = id,
-        title = title,
-        overview = overview,
-        releaseDate = releaseDate ?: "",
-        poster = "$POSTER_BASE_URL$posterPath",
-        backdrop = backdropPath?.let { "$BACKDROP_BASE_URL$it" },
-        originalTitle = originalTitle,
-        originalLanguage = originalLanguage,
-        popularity = popularity ?: 0.0,
-        voteAverage = voteAverage ?: 0.0
-    )
+) : RemoteMovie {
+    override fun toDomainMovie(): Movie {
+        return Movie(
+            id = id,
+            title = title,
+            overview = overview,
+            releaseDate = releaseDate ?: "",
+            poster = "$POSTER_BASE_URL$posterPath",
+            backdrop = backdropPath?.let { "$BACKDROP_BASE_URL$it" },
+            originalTitle = originalTitle,
+            originalLanguage = originalLanguage,
+            popularity = popularity ?: 0.0,
+            voteAverage = voteAverage ?: 0.0
+        )
+    }
 }
-
