@@ -3,6 +3,8 @@ package edu.dyds.movies.di
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import edu.dyds.movies.data.MoviesRepositoryImpl
+import edu.dyds.movies.data.external.MovieBroker
+import edu.dyds.movies.data.external.omdb.OMDBRemoteDataSource
 import edu.dyds.movies.data.external.tmdb.TMDBRemoteDataSource
 import edu.dyds.movies.data.local.MoviesLocalDataSourceImpl
 import edu.dyds.movies.domain.usecase.GetMovieByTitleUseCase
@@ -56,9 +58,16 @@ object MoviesDependencyInjector {
         }
     }
 
+    private val movieBroker by lazy {
+        MovieBroker(
+            tmdbDataSource = TMDBRemoteDataSource(tmdbHttpClient),
+            omdbDataSource = OMDBRemoteDataSource(omdbHttpClient)
+        )
+    }
+
     private val moviesRepository by lazy {
         MoviesRepositoryImpl(
-            remoteDataSource = TMDBRemoteDataSource(tmdbHttpClient),
+            movieBroker = movieBroker,
             localDataSource = MoviesLocalDataSourceImpl()
         )
     }

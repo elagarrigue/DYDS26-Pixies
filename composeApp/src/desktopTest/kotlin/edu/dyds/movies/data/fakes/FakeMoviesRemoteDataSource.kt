@@ -1,7 +1,7 @@
 package edu.dyds.movies.data.fakes
 
 import edu.dyds.movies.data.external.MoviesRemoteDataSource
-import edu.dyds.movies.data.external.RemoteMovie
+import edu.dyds.movies.data.external.tmdb.RemoteMovie
 
 class FakeMoviesRemoteDataSource(
     private val moviesResult: Result<List<RemoteMovie>>

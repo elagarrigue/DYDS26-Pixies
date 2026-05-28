@@ -1,0 +1,52 @@
+package edu.dyds.movies.data.external
+
+import edu.dyds.movies.data.external.omdb.OMDBRemoteDataSource
+import edu.dyds.movies.data.external.tmdb.TMDBRemoteDataSource
+import edu.dyds.movies.domain.entity.Movie
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+
+class MovieBroker(
+    private val tmdbDataSource: TMDBRemoteDataSource,
+    private val omdbDataSource: OMDBRemoteDataSource
+) {
+
+    suspend fun getMovieByTitle(title: String): Movie = coroutineScope {
+        val tmdbMovieDeferred = async {
+            tmdbDataSource.getMovieByTitle(title)
+        }
+
+        val omdbMovieDeferred = async {
+            omdbDataSource.getMovieByTitle(title)
+        }
+
+        val tmdbMovie = tmdbMovieDeferred.await()
+        val omdbMovie = omdbMovieDeferred.await()
+
+        return@coroutineScope buildMovie(tmdbMovie, omdbMovie)
+    }
+
+    suspend fun getPopularMovies(): List<Movie> {
+        // Assuming only TMDB provides popular movies for now
+        return try {
+            tmdbDataSource.getPopularMovies()
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
+    private fun buildMovie(tmdbMovie: Movie, omdbMovie: Movie ): Movie {
+        return Movie(
+            id = tmdbMovie.id,
+            title = tmdbMovie.title,
+            overview = "TMDB: ${tmdbMovie.overview}\n\nOMDB: ${omdbMovie.overview}",
+            releaseDate = tmdbMovie.releaseDate,
+            poster = tmdbMovie.poster,
+            backdrop = tmdbMovie.backdrop,
+            originalTitle = tmdbMovie.originalTitle,
+            originalLanguage = tmdbMovie.originalLanguage,
+            popularity = (tmdbMovie.popularity + omdbMovie.popularity) / 2.0,
+            voteAverage = (tmdbMovie.voteAverage + omdbMovie.voteAverage) / 2.0
+        )
+    }
+}

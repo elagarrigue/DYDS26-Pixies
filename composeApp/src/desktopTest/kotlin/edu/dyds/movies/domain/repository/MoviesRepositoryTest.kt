@@ -1,6 +1,6 @@
 package edu.dyds.movies.data
 
-import edu.dyds.movies.data.external.RemoteMovie
+import edu.dyds.movies.data.external.tmdb.RemoteMovie
 import edu.dyds.movies.data.fakes.FakeMoviesLocalDataSource
 import edu.dyds.movies.data.fakes.FakeMoviesRemoteDataSource
 import edu.dyds.movies.domain.entity.Movie
