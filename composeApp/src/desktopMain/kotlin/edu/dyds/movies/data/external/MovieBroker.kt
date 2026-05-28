@@ -9,9 +9,9 @@ import kotlinx.coroutines.coroutineScope
 class MovieBroker(
     private val tmdbDataSource: TMDBRemoteDataSource,
     private val omdbDataSource: OMDBRemoteDataSource
-) {
+) : MovieRemoteDataSource, MoviesRemoteDataSource {
 
-    suspend fun getMovieByTitle(title: String): Movie = coroutineScope {
+    override suspend fun getMovieByTitle(title: String): Movie = coroutineScope {
         val tmdbMovieDeferred = async {
             tmdbDataSource.getMovieByTitle(title)
         }
@@ -26,7 +26,7 @@ class MovieBroker(
         return@coroutineScope buildMovie(tmdbMovie, omdbMovie)
     }
 
-    suspend fun getPopularMovies(): List<Movie> {
+    override suspend fun getPopularMovies(): List<Movie> {
         // Assuming only TMDB provides popular movies for now
         return try {
             tmdbDataSource.getPopularMovies()
