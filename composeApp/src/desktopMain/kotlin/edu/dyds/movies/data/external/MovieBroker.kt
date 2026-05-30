@@ -9,7 +9,7 @@ import kotlinx.coroutines.coroutineScope
 class MovieBroker(
     private val tmdbDataSource: TMDBRemoteDataSource,
     private val omdbDataSource: OMDBRemoteDataSource
-) : MovieDetailExternalSource, PopularMoviesExternalSource {
+) : MovieDetailRemoteSource, PopularMoviesRemoteSource {
 
     override suspend fun getMovieByTitle(title: String): Movie = coroutineScope {
         val tmdbMovieDeferred = async {

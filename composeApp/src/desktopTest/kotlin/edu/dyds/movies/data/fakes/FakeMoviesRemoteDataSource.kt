@@ -1,11 +1,11 @@
 package edu.dyds.movies.data.fakes
 
-import edu.dyds.movies.data.external.PopularMoviesExternalSource
+import edu.dyds.movies.data.external.PopularMoviesRemoteSource
 import edu.dyds.movies.data.external.tmdb.TMDBRemoteMovie
 
 class FakeMoviesRemoteDataSource(
     private val moviesResult: Result<List<TMDBRemoteMovie>>
-) : PopularMoviesExternalSource {
+) : PopularMoviesRemoteSource {
     override suspend fun getPopularMovies(): List<TMDBRemoteMovie> {
         return moviesResult.getOrThrow()
     }

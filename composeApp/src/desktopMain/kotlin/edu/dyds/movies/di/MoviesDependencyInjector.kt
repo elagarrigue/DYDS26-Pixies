@@ -67,7 +67,8 @@ object MoviesDependencyInjector {
 
     private val moviesRepository by lazy {
         MoviesRepositoryImpl(
-            movieBroker = movieBroker,
+            movieDetailRemoteSource = movieBroker,
+            popularMoviesRemoteSource = movieBroker,
             localDataSource = MoviesLocalDataSourceImpl()
         )
     }
