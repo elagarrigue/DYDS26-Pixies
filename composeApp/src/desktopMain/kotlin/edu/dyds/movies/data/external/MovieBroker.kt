@@ -27,7 +27,6 @@ class MovieBroker(
     }
 
     override suspend fun getPopularMovies(): List<Movie> {
-        // Assuming only TMDB provides popular movies for now
         return try {
             tmdbDataSource.getPopularMovies()
         } catch (_: Exception) {
