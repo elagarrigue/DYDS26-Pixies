@@ -4,6 +4,6 @@ import edu.dyds.movies.domain.entity.Movie
 
 interface MovieDetailRemoteSource {
 
-    suspend fun getMovieByTitle(title: String): Movie
+    suspend fun getMovieByTitle(title: String): Movie?
 
 }

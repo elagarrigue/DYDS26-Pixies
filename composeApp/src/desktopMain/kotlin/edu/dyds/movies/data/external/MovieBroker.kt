@@ -11,7 +11,7 @@ class MovieBroker(
     private val omdbDataSource: OMDBRemoteDataSource
 ) : MovieDetailRemoteSource, PopularMoviesRemoteSource {
 
-    override suspend fun getMovieByTitle(title: String): Movie = coroutineScope {
+    override suspend fun getMovieByTitle(title: String): Movie? = coroutineScope {
         val tmdbMovieDeferred = async {
             tmdbDataSource.getMovieByTitle(title)
         }
@@ -34,7 +34,7 @@ class MovieBroker(
         }
     }
 
-    private fun buildMovie(tmdbMovie: Movie, omdbMovie: Movie ): Movie {
+    private fun buildMovie(tmdbMovie: Movie, omdbMovie: Movie ): Movie? {
         return Movie(
             id = tmdbMovie.id,
             title = tmdbMovie.title,
