@@ -1,7 +1,5 @@
 package edu.dyds.movies.data.external
 
-import edu.dyds.movies.data.external.omdb.OMDBRemoteDataSource
-import edu.dyds.movies.data.external.tmdb.TMDBRemoteDataSource
 import edu.dyds.movies.domain.entity.Movie
 
 class MovieBroker(
