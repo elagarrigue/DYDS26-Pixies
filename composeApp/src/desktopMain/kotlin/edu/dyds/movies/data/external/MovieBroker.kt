@@ -3,39 +3,26 @@ package edu.dyds.movies.data.external
 import edu.dyds.movies.data.external.omdb.OMDBRemoteDataSource
 import edu.dyds.movies.data.external.tmdb.TMDBRemoteDataSource
 import edu.dyds.movies.domain.entity.Movie
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 
 class MovieBroker(
-    private val tmdbDataSource: TMDBRemoteDataSource,
-    private val omdbDataSource: OMDBRemoteDataSource
-) : MovieDetailRemoteSource, PopularMoviesRemoteSource {
+    private val tmdbDataSource: MovieDetailRemoteSource,
+    private val omdbDataSource: MovieDetailRemoteSource
+) : MovieDetailRemoteSource {
 
-    override suspend fun getMovieByTitle(title: String): Movie? = coroutineScope {
-        val tmdbMovieDeferred = async {
-            tmdbDataSource.getMovieByTitle(title)
-        }
+    override suspend fun getMovieByTitle(title: String): Movie? {
+        val tmdbMovie = tmdbDataSource.getMovieByTitle(title)
+        val omdbMovie = omdbDataSource.getMovieByTitle(title)
 
-        val omdbMovieDeferred = async {
-            omdbDataSource.getMovieByTitle(title)
-        }
-
-        val tmdbMovie = tmdbMovieDeferred.await()
-        val omdbMovie = omdbMovieDeferred.await()
-
-        return@coroutineScope buildMovie(tmdbMovie, omdbMovie)
-    }
-
-    override suspend fun getPopularMovies(): List<Movie> {
-        return try {
-            tmdbDataSource.getPopularMovies()
-        } catch (_: Exception) {
-            emptyList()
+        return when {
+            tmdbMovie != null && omdbMovie != null -> buildMovie(tmdbMovie, omdbMovie)
+            tmdbMovie != null -> tmdbMovie.copy(overview = "TMDB: ${tmdbMovie.overview}")
+            omdbMovie != null -> omdbMovie.copy(overview = "OMDB: ${omdbMovie.overview}")
+            else -> null
         }
     }
 
-    private fun buildMovie(tmdbMovie: Movie, omdbMovie: Movie ): Movie? {
-        return Movie(
+    private fun buildMovie(tmdbMovie: Movie, omdbMovie: Movie ): Movie =
+        Movie(
             id = tmdbMovie.id,
             title = tmdbMovie.title,
             overview = listOfNotNull(
@@ -50,5 +37,4 @@ class MovieBroker(
             popularity = (tmdbMovie.popularity + omdbMovie.popularity) / 2.0,
             voteAverage = (tmdbMovie.voteAverage + omdbMovie.voteAverage) / 2.0
         )
-    }
 }

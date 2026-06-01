@@ -58,9 +58,13 @@ object MoviesDependencyInjector {
         }
     }
 
+    private val tmdbRemoteDataSource by lazy {
+        TMDBRemoteDataSource(tmdbHttpClient)
+    }
+
     private val movieBroker by lazy {
         MovieBroker(
-            tmdbDataSource = TMDBRemoteDataSource(tmdbHttpClient),
+            tmdbDataSource = tmdbRemoteDataSource,
             omdbDataSource = OMDBRemoteDataSource(omdbHttpClient)
         )
     }
@@ -68,7 +72,7 @@ object MoviesDependencyInjector {
     private val moviesRepository by lazy {
         MoviesRepositoryImpl(
             movieDetailRemoteSource = movieBroker,
-            popularMoviesRemoteSource = movieBroker,
+            popularMoviesRemoteSource = tmdbRemoteDataSource,
             localDataSource = MoviesLocalDataSourceImpl()
         )
     }

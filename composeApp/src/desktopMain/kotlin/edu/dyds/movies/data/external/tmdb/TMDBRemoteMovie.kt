@@ -1,6 +1,5 @@
 package edu.dyds.movies.data.external.tmdb
 
-import edu.dyds.movies.data.external.RemoteMovie
 import edu.dyds.movies.domain.entity.Movie
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,8 +27,8 @@ data class TMDBRemoteMovie(
     @SerialName("original_language") val originalLanguage: String,
     val popularity: Double?,
     @SerialName("vote_average") val voteAverage: Double?,
-) : RemoteMovie {
-    override fun toDomainMovie(): Movie {
+) {
+    fun toDomainMovie(): Movie {
         return Movie(
             id = id,
             title = title,

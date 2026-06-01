@@ -10,7 +10,11 @@ class OMDBRemoteDataSource(
     private val omdbHttpClient: HttpClient
 ) : MovieDetailRemoteSource {
 
-    override suspend fun getMovieByTitle(title: String): Movie {
-        return omdbHttpClient.get("/?t=$title").body<OMDBRemoteMovie>().toDomainMovie()
+    override suspend fun getMovieByTitle(title: String): Movie? {
+        return try {
+            return omdbHttpClient.get("/?t=$title").body<OMDBRemoteMovie>().toDomainMovie()
+        } catch (_: Exception) {
+            null
+        }
     }
 }

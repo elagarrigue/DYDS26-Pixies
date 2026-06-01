@@ -17,10 +17,14 @@ class TMDBRemoteDataSource(
             .map { it.toDomainMovie() }
     }
 
-    override suspend fun getMovieByTitle(title: String): Movie {
-        return tmdbHttpClient.get("/3/search/movie?query=$title")
+    override suspend fun getMovieByTitle(title: String): Movie? {
+        return  try{
+            tmdbHttpClient.get("/3/search/movie?query=$title")
                 .body<RemoteResult>()
                 .results
                 .first().toDomainMovie()
+        } catch (_: Exception) {
+            null
+        }
     }
 }
