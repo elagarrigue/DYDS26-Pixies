@@ -7,7 +7,7 @@ class FakeMoviesRepository : MoviesRepository {
     private val movies: List<Movie>
     var getPopularMoviesCalls = 0
         private set
-    var getMovieDetailsCallCount = 0
+    var getMovieByTitleCallCount = 0
         private set
 
     constructor(movies: List<Movie> = emptyList()) {
@@ -19,10 +19,10 @@ class FakeMoviesRepository : MoviesRepository {
         return movies
     }
 
-    override suspend fun getMovieDetails(id: Int): Movie? {
-        getMovieDetailsCallCount++
+    override suspend fun getMovieByTitle(title: String): Movie? {
+        getMovieByTitleCallCount++
         for (movie in movies) {
-            if (movie.id == id) {
+            if (movie.title == title) {
                 return movie
             }
         }
