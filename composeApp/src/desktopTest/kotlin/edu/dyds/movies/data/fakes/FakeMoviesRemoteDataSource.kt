@@ -1,18 +1,12 @@
 package edu.dyds.movies.data.fakes
 
 import edu.dyds.movies.data.external.PopularMoviesRemoteSource
-import edu.dyds.movies.data.external.tmdb.TMDBRemoteMovie
+import edu.dyds.movies.domain.entity.Movie
 
 class FakeMoviesRemoteDataSource(
-    private val moviesResult: Result<List<TMDBRemoteMovie>>
+    private val moviesResult: Result<List<Movie>>
 ) : PopularMoviesRemoteSource {
-    override suspend fun getPopularMovies(): List<TMDBRemoteMovie> {
+    override suspend fun getPopularMovies(): List<Movie> {
         return moviesResult.getOrThrow()
     }
-
-    override suspend fun getMovieDetails(id: Int): TMDBRemoteMovie {
-        return moviesResult.getOrThrow().find { it.id == id }
-            ?: throw IllegalArgumentException("Movie not found")
-    }
 }
-
