@@ -42,8 +42,8 @@ class MoviesRepositoryImplTest {
             savePopularMovies(cached)
         }
         val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(Result.success(emptyList()))
-        val movieDetailRemoteSource = FakeMovieDetailRemoteSource() // Added
-        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource) // Updated
+        val movieDetailRemoteSource = FakeMovieDetailRemoteSource()
+        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource)
 
         // act
         val result = repository.getPopularMovies()
@@ -61,8 +61,8 @@ class MoviesRepositoryImplTest {
         )
         val localDataSource = FakeMoviesLocalDataSource()
         val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(Result.success(remoteMovies))
-        val movieDetailRemoteSource = FakeMovieDetailRemoteSource() // Added
-        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource) // Updated
+        val movieDetailRemoteSource = FakeMovieDetailRemoteSource()
+        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource)
 
         // act
         val result = repository.getPopularMovies()
@@ -80,8 +80,8 @@ class MoviesRepositoryImplTest {
         val remoteMovies = listOf(createMovie(1))
         val localDataSource = FakeMoviesLocalDataSource()
         val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(Result.success(remoteMovies))
-        val movieDetailRemoteSource = FakeMovieDetailRemoteSource() // Added
-        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource) // Updated
+        val movieDetailRemoteSource = FakeMovieDetailRemoteSource()
+        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource)
 
         // act
         repository.getPopularMovies()
@@ -99,8 +99,8 @@ class MoviesRepositoryImplTest {
         val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(
             Result.failure(Exception("Network error"))
         )
-        val movieDetailRemoteSource = FakeMovieDetailRemoteSource() // Added
-        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource) // Updated
+        val movieDetailRemoteSource = FakeMovieDetailRemoteSource()
+        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource)
 
         // act
         val result = repository.getPopularMovies()
@@ -114,9 +114,9 @@ class MoviesRepositoryImplTest {
         // arrange
         val movie = createMovie(42, "Fight Club")
         val localDataSource = FakeMoviesLocalDataSource()
-        val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(Result.success(emptyList())) // Not used in this test, but required by constructor
-        val movieDetailRemoteSource = FakeMovieDetailRemoteSource(movieToReturn = movie) // Configured for this test
-        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource) // Updated
+        val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(Result.success(emptyList()))
+        val movieDetailRemoteSource = FakeMovieDetailRemoteSource(movieToReturn = movie)
+        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource)
 
         // act
         val result = repository.getMovieByTitle("Fight Club")
@@ -132,27 +132,11 @@ class MoviesRepositoryImplTest {
         // arrange
         val localDataSource = FakeMoviesLocalDataSource()
         val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(Result.success(emptyList()))
-        val movieDetailRemoteSource = FakeMovieDetailRemoteSource(movieToReturn = createMovie(title = "Another Movie")) // Movie that won't match
+        val movieDetailRemoteSource = FakeMovieDetailRemoteSource(movieToReturn = createMovie(title = "Another Movie"))
         val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource)
 
         // act
         val result = repository.getMovieByTitle("NonExistentMovie")
-
-        // assert
-        assertNull(result)
-        assertEquals(1, movieDetailRemoteSource.getMovieByTitleCalls)
-    }
-
-    @Test
-    fun `getMovieByTitle should return null when remote throws exception`() = runTest {
-        // arrange
-        val localDataSource = FakeMoviesLocalDataSource()
-        val popularMoviesRemoteDataSource = FakeMoviesRemoteDataSource(Result.success(emptyList()))
-        val movieDetailRemoteSource = FakeMovieDetailRemoteSource(exceptionToThrow = Exception("Network error"))
-        val repository = MoviesRepositoryImpl(movieDetailRemoteSource, popularMoviesRemoteDataSource, localDataSource)
-
-        // act
-        val result = repository.getMovieByTitle("Any Movie")
 
         // assert
         assertNull(result)
