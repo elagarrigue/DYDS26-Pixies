@@ -3,10 +3,12 @@ package edu.dyds.movies.di
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import edu.dyds.movies.data.MoviesRepositoryImpl
-import edu.dyds.movies.data.external.MoviesRemoteDataSourceImpl
+import edu.dyds.movies.data.external.MovieBroker
+import edu.dyds.movies.data.external.omdb.OMDBRemoteDataSource
+import edu.dyds.movies.data.external.tmdb.TMDBRemoteDataSource
 import edu.dyds.movies.data.local.MoviesLocalDataSourceImpl
-import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCase
-import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCaseImpl
+import edu.dyds.movies.domain.usecase.GetMovieByTitleUseCase
+import edu.dyds.movies.domain.usecase.GetMovieByTitleUseCaseImpl
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCase
 import edu.dyds.movies.domain.usecase.GetPopularMoviesUseCaseImpl
 import edu.dyds.movies.presentation.home.HomeViewModel
@@ -19,7 +21,8 @@ import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-private const val API_KEY = "d18da1b5da16397619c688b0263cd281"
+private const val TMDB_API_KEY = "d18da1b5da16397619c688b0263cd281"
+private const val OMDB_API_KEY = "a96e7f78"
 
 object MoviesDependencyInjector {
 
@@ -31,7 +34,7 @@ object MoviesDependencyInjector {
             url {
                 protocol = URLProtocol.HTTPS
                 host = "api.themoviedb.org"
-                parameters.append("api_key", API_KEY)
+                parameters.append("api_key", TMDB_API_KEY)
             }
         }
         install(HttpTimeout) {
@@ -39,9 +42,37 @@ object MoviesDependencyInjector {
         }
     }
 
+    private val omdbHttpClient = HttpClient {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+        install(DefaultRequest) {
+            url {
+                protocol = URLProtocol.HTTPS
+                host = "www.omdbapi.com"
+                parameters.append("apikey", OMDB_API_KEY)
+            }
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = 5000
+        }
+    }
+
+    private val tmdbRemoteDataSource by lazy {
+        TMDBRemoteDataSource(tmdbHttpClient)
+    }
+
+    private val movieBroker by lazy {
+        MovieBroker(
+            tmdbDataSource = tmdbRemoteDataSource,
+            omdbDataSource = OMDBRemoteDataSource(omdbHttpClient)
+        )
+    }
+
     private val moviesRepository by lazy {
         MoviesRepositoryImpl(
-            remoteDataSource = MoviesRemoteDataSourceImpl(tmdbHttpClient),
+            movieDetailRemoteSource = movieBroker,
+            popularMoviesRemoteSource = tmdbRemoteDataSource,
             localDataSource = MoviesLocalDataSourceImpl()
         )
     }
@@ -50,11 +81,9 @@ object MoviesDependencyInjector {
         GetPopularMoviesUseCaseImpl(moviesRepository)
     }
 
-    private val getMovieDetailsUseCase: GetMovieDetailsUseCase by lazy {
-        GetMovieDetailsUseCaseImpl(moviesRepository)
+    private val getMovieByTitleUseCase: GetMovieByTitleUseCase by lazy {
+        GetMovieByTitleUseCaseImpl(moviesRepository)
     }
-
-
 
     @Composable
     fun getHomeViewModel(): HomeViewModel {
@@ -69,7 +98,7 @@ object MoviesDependencyInjector {
     fun getDetailViewModel(): DetailViewModel {
         return viewModel {
             DetailViewModel(
-                getMovieDetailsUseCase = getMovieDetailsUseCase
+                getMovieByTitleUseCase = getMovieByTitleUseCase
             )
         }
     }

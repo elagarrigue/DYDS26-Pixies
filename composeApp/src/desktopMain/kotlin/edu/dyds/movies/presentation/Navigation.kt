@@ -19,7 +19,7 @@ import edu.dyds.movies.presentation.home.HomeScreen
 
 private const val HOME = "home"
 private const val DETAIL = "detail"
-private const val MOVIE_ID = "movieId"
+private const val MOVIE_TITLE = "movieTitle"
 
 @Composable
 fun Navigation() {
@@ -41,7 +41,7 @@ private fun NavGraphBuilder.homeDestination(
         HomeScreen(
             viewModel = homeViewModel,
             onGoodMovieClick = { movie ->
-                navController.navigate("$DETAIL/${movie.id}")
+                navController.navigate("$DETAIL/${movie.title}")
             }
         )
     }
@@ -52,15 +52,15 @@ private fun NavGraphBuilder.detailDestination(
     detailViewModel: DetailViewModel
 ) {
     composable(
-        route = "$DETAIL/{$MOVIE_ID}",
-        arguments = listOf(navArgument(MOVIE_ID) { type = NavType.IntType })
+        route = "$DETAIL/{$MOVIE_TITLE}",
+        arguments = listOf(navArgument(MOVIE_TITLE) { type = NavType.StringType })
     ) { backstackEntry ->
-        val movieId = backstackEntry.arguments?.getInt(MOVIE_ID)
+        val movieTitle = backstackEntry.arguments?.getString(MOVIE_TITLE)
 
-        movieId?.let {
+        movieTitle?.let {
             DetailScreen(
                 viewModel = detailViewModel,
-                id = it,
+                title = it,
                 onBack = { navController.popBackStack() }
             )
         }

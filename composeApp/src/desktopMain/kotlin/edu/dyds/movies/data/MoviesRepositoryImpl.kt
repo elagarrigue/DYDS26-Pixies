@@ -1,13 +1,14 @@
 package edu.dyds.movies.data
 
-import edu.dyds.movies.data.external.MoviesRemoteDataSource
-import edu.dyds.movies.data.external.toDomainMovie
+import edu.dyds.movies.data.external.MovieDetailRemoteSource
+import edu.dyds.movies.data.external.PopularMoviesRemoteSource
 import edu.dyds.movies.data.local.MoviesLocalDataSource
 import edu.dyds.movies.domain.entity.Movie
 import edu.dyds.movies.domain.repository.MoviesRepository
 
 class MoviesRepositoryImpl(
-    private val remoteDataSource: MoviesRemoteDataSource,
+    private val movieDetailRemoteSource: MovieDetailRemoteSource,
+    private val popularMoviesRemoteSource: PopularMoviesRemoteSource,
     private val localDataSource: MoviesLocalDataSource
 ) : MoviesRepository {
 
@@ -18,20 +19,15 @@ class MoviesRepositoryImpl(
         }
 
         return try {
-            remoteDataSource
+            popularMoviesRemoteSource
                 .getPopularMovies()
-                .map { remoteMovie -> remoteMovie.toDomainMovie() }
                 .also { movies -> localDataSource.savePopularMovies(movies) }
         } catch (_: Exception) {
             emptyList()
         }
     }
 
-    override suspend fun getMovieDetails(id: Int): Movie? {
-        return try {
-            remoteDataSource.getMovieDetails(id).toDomainMovie()
-        } catch (_: Exception) {
-            null
-        }
+    override suspend fun getMovieByTitle(title: String): Movie? {
+        return movieDetailRemoteSource.getMovieByTitle(title)
     }
 }

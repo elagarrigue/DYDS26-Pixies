@@ -1,17 +1,16 @@
 package edu.dyds.movies.domain.fakes
 
 import edu.dyds.movies.domain.entity.Movie
-import edu.dyds.movies.domain.usecase.GetMovieDetailsUseCase
+import edu.dyds.movies.domain.usecase.GetMovieByTitleUseCase
 
-class FakeGetMovieDetailsUseCase(
+class FakeGetMovieByTitleUseCase(
     private val movieToReturn: Movie?
-) : GetMovieDetailsUseCase {
+) : GetMovieByTitleUseCase {
     var invokeCalls = 0
         private set
 
-    override suspend fun invoke(id: Int): Movie? {
+    override suspend fun invoke(title: String): Movie? {
         invokeCalls++
         return movieToReturn
     }
 }
-

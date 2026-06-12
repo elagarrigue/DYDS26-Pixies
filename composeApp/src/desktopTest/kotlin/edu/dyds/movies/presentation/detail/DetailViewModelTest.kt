@@ -1,7 +1,7 @@
 package edu.dyds.movies.presentation.detail
 
 import edu.dyds.movies.domain.entity.Movie
-import edu.dyds.movies.domain.fakes.FakeGetMovieDetailsUseCase
+import edu.dyds.movies.domain.fakes.FakeGetMovieByTitleUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -34,10 +34,10 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `getMovieDetail emits loading then success state`() = runTest {
+    fun `getMovieByTitle emits loading then success state`() = runTest {
         // arrange
         val movie = sampleMovie(42, "The Answer")
-        val useCase = FakeGetMovieDetailsUseCase(movie)
+        val useCase = FakeGetMovieByTitleUseCase(movie)
         val viewModel = DetailViewModel(useCase)
 
         val states = mutableListOf<DetailViewModel.MovieDetailUiState>()
@@ -49,7 +49,7 @@ class DetailViewModelTest {
         }
 
         // act
-        viewModel.getMovieDetail(movie.id)
+        viewModel.getMovieByTitle(movie.title)
 
         // assert
         assertEquals(DetailViewModel.MovieDetailUiState(), states.first())
@@ -65,9 +65,9 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `getMovieDetail handles missing movie`() = runTest {
+    fun `getMovieByTitle handles missing movie`() = runTest {
         // arrange
-        val useCase = FakeGetMovieDetailsUseCase(null)
+        val useCase = FakeGetMovieByTitleUseCase(null)
         val viewModel = DetailViewModel(useCase)
 
         val states = mutableListOf<DetailViewModel.MovieDetailUiState>()
@@ -76,7 +76,7 @@ class DetailViewModelTest {
         }
 
         // act
-        viewModel.getMovieDetail(123)
+        viewModel.getMovieByTitle("NonExistentMovie")
         advanceUntilIdle()
 
         // assert

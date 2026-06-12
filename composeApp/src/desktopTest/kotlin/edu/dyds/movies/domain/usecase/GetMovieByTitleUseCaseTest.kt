@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class GetMovieDetailsUseCaseTest {
+class GetMovieByTitleUseCaseTest {
 
 
     private fun createTestMovie(
@@ -40,47 +40,47 @@ class GetMovieDetailsUseCaseTest {
         val testMovie = createTestMovie(id = 123, title = "Avatar")
         val repository = FakeMoviesRepository(movies = listOf(testMovie))
 
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
-        val result = useCase(123)
+        val result = useCase("Avatar")
 
         // assert
         assertEquals(testMovie, result)
-        assertEquals(1, repository.getMovieDetailsCallCount)
+        assertEquals(1, repository.getMovieByTitleCallCount)
     }
 
     @Test
     fun `invoke should return null when movie does not exist in repository`() = runTest {
         // arrange
         val repository = FakeMoviesRepository()
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
-        val result = useCase(999)
+        val result = useCase("NonExistentMovie")
 
         // assert
         assertNull(result)
-        assertEquals(1, repository.getMovieDetailsCallCount)
+        assertEquals(1, repository.getMovieByTitleCallCount)
     }
 
     @Test
-    fun `invoke should fetch correct movie by id from multiple movies`() = runTest {
+    fun `invoke should fetch correct movie by title from multiple movies`() = runTest {
         // arrange
         val movie1 = createTestMovie(id = 1, title = "Movie 1")
         val movie2 = createTestMovie(id = 2, title = "Movie 2")
         val movie3 = createTestMovie(id = 3, title = "Movie 3")
         val repository = FakeMoviesRepository(movies = listOf(movie1, movie2, movie3))
 
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
-        val result = useCase(2)
+        val result = useCase("Movie 2")
 
         // assert
         assertEquals(movie2, result)
         assertEquals(movie2.title, result?.title)
-        assertEquals(1, repository.getMovieDetailsCallCount)
+        assertEquals(1, repository.getMovieByTitleCallCount)
     }
 
     @Test
@@ -100,10 +100,10 @@ class GetMovieDetailsUseCaseTest {
         )
         val repository = FakeMoviesRepository(movies = listOf(movie))
 
-        val useCase = GetMovieDetailsUseCaseImpl(repository)
+        val useCase = GetMovieByTitleUseCaseImpl(repository)
 
         // act
-        val result = useCase(550)
+        val result = useCase("Fight Club")
 
         // assert
         assertEquals(550, result?.id)
@@ -112,6 +112,6 @@ class GetMovieDetailsUseCaseTest {
         assertEquals("1999-10-15", result?.releaseDate)
         assertEquals(8.8, result?.voteAverage)
         assertEquals("en", result?.originalLanguage)
+        assertEquals(1, repository.getMovieByTitleCallCount)
     }
 }
-
